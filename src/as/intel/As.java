@@ -1,7 +1,7 @@
 /*
 RNU
 8086 Assembler
-Author: Ronin Morata
+Author: Ronin Morata, Anastasia Koshelenko
 */
 
 package as.intel;
@@ -37,7 +37,7 @@ public class As {
     // Bytecode
 
     private int _IP; // Instruction Pointer
-    private ArrayList<Byte> _bytecode;
+    private ArrayList<Object> _bytecode;
     private HashMap<String, Integer> _labels;
     private int _binLength;
 
@@ -48,7 +48,7 @@ public class As {
 
     public As() {
         this._IP = 0x100;
-        this._bytecode = new ArrayList<Byte> ();
+        this._bytecode = new ArrayList<Object> ();
         this._labels = new HashMap<String, Integer> ();
         this._binLength = 0;
     }
@@ -72,6 +72,17 @@ public class As {
 
     /////////////////////
     // Helper Functions
+    public static ArrayList<Object> asUnsigned(ArrayList<?> bytecode){
+        ArrayList<Object> unsignedNums = new ArrayList<>();
+        for(Object signedByte: bytecode){
+            if(signedByte instanceof Byte){
+            unsignedNums.add(((Byte) signedByte).intValue() & 0xFF);
+            }else{
+                unsignedNums.add(signedByte);
+            }
+        }
+        return unsignedNums;
+    }
 
     private byte[] _byte(int value) {
         return new byte[] {(byte) (value & 0xFF)};
@@ -81,10 +92,11 @@ public class As {
         return new byte[] {(byte) (value & 0xFF), (byte) ((value & 0xFF00) >> 8)};
     }
 
+
     ////////////
     // Getters
 
-    public ArrayList<Byte> getByteCode() {
+    public ArrayList<Object> getByteCode() {
         return this._bytecode;
     }
 
