@@ -86,6 +86,16 @@ public class As {
         this._labels.put(label, this._IP);
     }
 
+    public void JMP(int dist8b) {
+        this._bytecode_add(0xEB);
+        this._bytecode_add(dist8b & 0xFF);
+    }
+
+    public void JMP(String dist8b) {
+        this._bytecode_add(0xEB);
+        this._bytecode_add("3:" + (this._IP-1) + ":" + dist8b); // _IP gets decremented because _bytecode_add() automatically increments it
+    }
+
     /////////////////////
     // Helper Functions
     public static ArrayList<Object> asUnsigned(ArrayList<?> bytecode){
