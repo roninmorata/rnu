@@ -42,7 +42,7 @@ public class As {
     private int _binLength;
 
     private <T> void _bytecode_add(T x) {
-        this._bytecode.add((Object)x);
+        this._bytecode.add(x);
         this._IP++;
     }
 
@@ -79,6 +79,7 @@ public class As {
     public void MOVR16(int reg16b, String val16b) {
         this._bytecode_add(0xB0 | reg16b);
         this._bytecode_add("2:" + (String)val16b);
+        this._IP++;
     }
 
     public void LABEL(String label) {
