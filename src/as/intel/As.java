@@ -70,6 +70,21 @@ public class As {
         this._bytecode_add(val8b & 0xFF);
     }
 
+    public void MOVR16(int reg16b, int val16b) {
+        this._bytecode_add(0xB0 | reg16b);
+        this._bytecode_add(val16b & 0xFF);
+        this._bytecode_add((val16b & 0xFF00) >> 8);
+    }
+
+    public void MOVR16(int reg16b, String val16b) {
+        this._bytecode_add(0xB0 | reg16b);
+        this._bytecode_add("2:" + (String)val16b);
+    }
+
+    public void LABEL(String label) {
+        this._labels.put(label, this._IP);
+    }
+
     /////////////////////
     // Helper Functions
     public static ArrayList<Object> asUnsigned(ArrayList<?> bytecode){
