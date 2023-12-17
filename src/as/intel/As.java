@@ -41,8 +41,8 @@ public class As {
     private HashMap<String, Integer> _labels;
     private int _binLength;
 
-    private void _bytecode_add(int x) {
-        this._bytecode.add((byte)x);
+    private <T> void _bytecode_add(T x) {
+        this._bytecode.add((Object)x);
         this._IP++;
     }
 
@@ -134,7 +134,7 @@ public class As {
                         break;
                 }
             } else {
-                result.add((Byte) cell);
+                result.add(((Integer) cell).byteValue());
             }
         }
         this._binLength = result.size();
