@@ -65,18 +65,18 @@ public class As {
         this._bytecode_add(val8b & 0xFF);
     }
 
-    public void MOVR8(int reg8b, int val8b) {
+    public void MOV(int reg8b, byte val8b) {
         this._bytecode_add(0xB0 | reg8b);
         this._bytecode_add(val8b & 0xFF);
     }
 
-    public void MOVR16(int reg16b, int val16b) {
+    public void MOV(int reg16b, short val16b) {
         this._bytecode_add(0xB0 | reg16b);
         this._bytecode_add(val16b & 0xFF);
         this._bytecode_add((val16b & 0xFF00) >> 8);
     }
 
-    public void MOVR16(int reg16b, String val16b) {
+    public void MOV(int reg16b, String val16b) {
         this._bytecode_add(0xB0 | reg16b);
         this._bytecode_add("2:" + val16b);
         this._IP++;
