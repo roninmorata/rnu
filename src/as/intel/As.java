@@ -65,21 +65,12 @@ public class As {
         this._bytecode_add(val8b & 0xFF);
     }
 
-    public void MOV(int reg8b, byte val8b) {
-        this._bytecode_add(0xB0 | reg8b);
-        this._bytecode_add(val8b & 0xFF);
-    }
-
-    public void MOV(int reg16b, short val16b) {
-        this._bytecode_add(0xB0 | reg16b);
-        this._bytecode_add(val16b & 0xFF);
-        this._bytecode_add((val16b & 0xFF00) >> 8);
-    }
-
-    public void MOV(int reg16b, String val16b) {
-        this._bytecode_add(0xB0 | reg16b);
-        this._bytecode_add("2:" + val16b);
-        this._IP++;
+    public void MOV(int reg, int val){
+        _bytecode_add(0xB0 | reg);
+        _bytecode_add(val & 0xFF);
+        if((reg >= 0x08) && (reg <= 0x0F)){
+            _bytecode_add((val & 0xFF00) >> 8);
+        }
     }
 
     public void JMP(int dist8b) {
@@ -190,7 +181,7 @@ public class As {
         ArrayList<Object> unsignedNums = new ArrayList<>();
         for(Object signedByte: bytecode){
             if(signedByte instanceof Byte){
-            unsignedNums.add(((Byte) signedByte).intValue() & 0xFF);
+                unsignedNums.add(((Byte) signedByte).intValue() & 0xFF);
             }else{
                 unsignedNums.add(signedByte);
             }
@@ -232,7 +223,7 @@ public class As {
                         }
                         break;
                     case '2':
-                        for (byte b : this._word(this._labels.get(s.substring(2)))) {
+                        for (byte b : _word(_labels.get(s.substring(2)))) {
                             result.add(b);
                         }
                         break;
