@@ -92,11 +92,95 @@ public class As {
         this._bytecode_add("3:" + (this._IP-1) + ":" + dist8b); // _IP gets decremented because _bytecode_add() automatically increments it
     }
 
+    public void JMP(short dist16b) {
+        this._bytecode_add(0xE9);
+        this._bytecode_add(dist16b & 0xFFFF);
+        this._IP++;
+    }
+
+    public void INC(int reg16b) {
+        this._bytecode_add(0x40 | reg16b >> 4);
+    }
+
+    public void DEC(int reg16b) {
+        this._bytecode_add(0x40 | reg16b);
+    }
+
+    public void POP(int reg16b) {
+        this._bytecode_add(0x50 | reg16b);
+    }
+
+    public void PUSH(int reg16b) {
+        this._bytecode_add(0x50 | (reg16b >> 4));
+    }
+
+    public void CMP(byte val8b) {
+        this._bytecode_add(0x3C);
+        this._bytecode_add(val8b & 0xFF);
+    }
+
+    public void CMP(short val16b) {
+        this._bytecode_add(0x3D);
+        this._bytecode_add(val16b & 0xFFFF);
+    }
+
+    public void JZ(int dist8b) {
+        this._bytecode_add(0x74);
+        this._bytecode_add(dist8b & 0xFF);
+    }
+
+    public void JNZ(int dist8b) {
+        this._bytecode_add(0x75);
+        this._bytecode_add(dist8b & 0xFF);
+    }
+
+    public void JL(int dist8b) {
+        this._bytecode_add(0x7C);
+        this._bytecode_add(dist8b & 0xFF);
+    }
+
+    public void JGE(int dist8b) {
+        this._bytecode_add(0x7D);
+        this._bytecode_add(dist8b & 0xFF);
+    }
+
+    public void JLE(int dist8b) {
+        this._bytecode_add(0x7E);
+        this._bytecode_add(dist8b & 0xFF);
+    }
+
+    public void JG(int dist8b) {
+        this._bytecode_add(0x7F);
+        this._bytecode_add(dist8b & 0xFF);
+    }
+
+    public void JE(int dist8b) {
+        this.JZ(dist8b);
+    }
+
+    public void JNE(int dist8b) {
+        this.JNZ(dist8b);
+    }
+
     /////////////////////////
     // Assembler Directives
 
     public void LABEL(String label) {
         this._labels.put(label, this._IP);
+    }
+
+    public void DATA(String data) { //FIXFIX
+        this._bytecode_add(data);
+    }
+
+    public void EXIT() {
+        this.MOV(this.AX, (short)0);
+        this.INT(21);
+    }
+
+    public void EXIT(int value) {
+        this.MOV(this.AX, (short)value);
+        this.INT(21);
     }
 
     /////////////////////
