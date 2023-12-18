@@ -78,12 +78,8 @@ public class As {
 
     public void MOVR16(int reg16b, String val16b) {
         this._bytecode_add(0xB0 | reg16b);
-        this._bytecode_add("2:" + (String)val16b);
+        this._bytecode_add("2:" + val16b);
         this._IP++;
-    }
-
-    public void LABEL(String label) {
-        this._labels.put(label, this._IP);
     }
 
     public void JMP(int dist8b) {
@@ -96,8 +92,16 @@ public class As {
         this._bytecode_add("3:" + (this._IP-1) + ":" + dist8b); // _IP gets decremented because _bytecode_add() automatically increments it
     }
 
+    /////////////////////////
+    // Assembler Directives
+
+    public void LABEL(String label) {
+        this._labels.put(label, this._IP);
+    }
+
     /////////////////////
     // Helper Functions
+
     public static ArrayList<Object> asUnsigned(ArrayList<?> bytecode){
         ArrayList<Object> unsignedNums = new ArrayList<>();
         for(Object signedByte: bytecode){
@@ -117,7 +121,6 @@ public class As {
     private byte[] _word(int value) {
         return new byte[] {(byte) (value & 0xFF), (byte) ((value & 0xFF00) >> 8)};
     }
-
 
     ////////////
     // Getters
