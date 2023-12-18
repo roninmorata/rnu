@@ -41,148 +41,151 @@ public class As {
     private HashMap<String, Integer> _labels;
     private int _binLength;
 
-    private <T> void _bytecode_add(T x) {
-        this._bytecode.add(x);
-        this._IP++;
+    private <T> void _bytecode_add(T x) throws IllegalArgumentException {
+        if(!((x instanceof String) || (x instanceof Byte))){
+            throw new IllegalArgumentException();
+        }
+        _bytecode.add(x);
+        _IP++;
     }
 
     public As() {
-        this._IP = 0x100;
-        this._bytecode = new ArrayList<Object> ();
-        this._labels = new HashMap<String, Integer> ();
-        this._binLength = 0;
+        _IP = 0x100;
+        _bytecode = new ArrayList<Object> ();
+        _labels = new HashMap<String, Integer> ();
+        _binLength = 0;
     }
 
     /////////////////
     // Instructions
 
     public void NOP() {
-        this._bytecode_add(0x90);
+        _bytecode_add(0x90);
     }
 
     public void INT(int val8b) {
-        this._bytecode_add(0xCD);
-        this._bytecode_add(val8b & 0xFF);
+        _bytecode_add(0xCD);
+        _bytecode_add(val8b & 0xFF);
     }
 
-    public void MOV(int reg, int val){
+    public void MOV(int reg, int val) {
         _bytecode_add(0xB0 | reg);
         _bytecode_add(val & 0xFF);
-        if((reg >= 0x08) && (reg <= 0x0F)){
+        if ((reg >= 0x08) && (reg <= 0x0F)) {
             _bytecode_add((val & 0xFF00) >> 8);
         }
     }
 
     public void JMP(int dist8b) {
-        this._bytecode_add(0xEB);
-        this._bytecode_add(dist8b & 0xFF);
+        _bytecode_add(0xEB);
+        _bytecode_add(dist8b & 0xFF);
     }
 
     public void JMP(String dist8b) {
-        this._bytecode_add(0xEB);
-        this._bytecode_add("3:" + (this._IP-1) + ":" + dist8b); // _IP gets decremented because _bytecode_add() automatically increments it
+        _bytecode_add(0xEB);
+        _bytecode_add("3:" + (_IP-1) + ":" + dist8b); // _IP gets decremented because _bytecode_add() automatically increments it
     }
 
     public void JMP(short dist16b) {
-        this._bytecode_add(0xE9);
-        this._bytecode_add(dist16b & 0xFFFF);
-        this._IP++;
+        _bytecode_add(0xE9);
+        _bytecode_add(dist16b & 0xFFFF);
+        _IP++;
     }
 
     public void INC(int reg16b) {
-        this._bytecode_add(0x40 | reg16b >> 4);
+        _bytecode_add(0x40 | reg16b >> 4);
     }
 
     public void DEC(int reg16b) {
-        this._bytecode_add(0x40 | reg16b);
+        _bytecode_add(0x40 | reg16b);
     }
 
     public void POP(int reg16b) {
-        this._bytecode_add(0x50 | reg16b);
+        _bytecode_add(0x50 | reg16b);
     }
 
     public void PUSH(int reg16b) {
-        this._bytecode_add(0x50 | (reg16b >> 4));
+        _bytecode_add(0x50 | (reg16b >> 4));
     }
 
     public void CMP(byte val8b) {
-        this._bytecode_add(0x3C);
-        this._bytecode_add(val8b & 0xFF);
+        _bytecode_add(0x3C);
+        _bytecode_add(val8b & 0xFF);
     }
 
     public void CMP(short val16b) {
-        this._bytecode_add(0x3D);
-        this._bytecode_add(val16b & 0xFFFF);
+        _bytecode_add(0x3D);
+        _bytecode_add(val16b & 0xFFFF);
     }
 
     public void JZ(int dist8b) {
-        this._bytecode_add(0x74);
-        this._bytecode_add(dist8b & 0xFF);
+        _bytecode_add(0x74);
+        _bytecode_add(dist8b & 0xFF);
     }
 
     public void JNZ(int dist8b) {
-        this._bytecode_add(0x75);
-        this._bytecode_add(dist8b & 0xFF);
+        _bytecode_add(0x75);
+        _bytecode_add(dist8b & 0xFF);
     }
 
     public void JL(int dist8b) {
-        this._bytecode_add(0x7C);
-        this._bytecode_add(dist8b & 0xFF);
+        _bytecode_add(0x7C);
+        _bytecode_add(dist8b & 0xFF);
     }
 
     public void JGE(int dist8b) {
-        this._bytecode_add(0x7D);
-        this._bytecode_add(dist8b & 0xFF);
+        _bytecode_add(0x7D);
+        _bytecode_add(dist8b & 0xFF);
     }
 
     public void JLE(int dist8b) {
-        this._bytecode_add(0x7E);
-        this._bytecode_add(dist8b & 0xFF);
+        _bytecode_add(0x7E);
+        _bytecode_add(dist8b & 0xFF);
     }
 
     public void JG(int dist8b) {
-        this._bytecode_add(0x7F);
-        this._bytecode_add(dist8b & 0xFF);
+        _bytecode_add(0x7F);
+        _bytecode_add(dist8b & 0xFF);
     }
 
     public void JE(int dist8b) {
-        this.JZ(dist8b);
+        JZ(dist8b);
     }
 
     public void JNE(int dist8b) {
-        this.JNZ(dist8b);
+        JNZ(dist8b);
     }
 
     /////////////////////////
     // Assembler Directives
 
     public void LABEL(String label) {
-        this._labels.put(label, this._IP);
+        _labels.put(label, _IP);
     }
 
     public void DATA(String data) { //FIXFIX
-        this._bytecode_add(data);
+        _bytecode_add(data);
     }
 
     public void EXIT() {
-        this.MOV(this.AX, (short)0);
-        this.INT(21);
+        MOV(AX, (short)0);
+        INT(21);
     }
 
     public void EXIT(int value) {
-        this.MOV(this.AX, (short)value);
-        this.INT(21);
+        MOV(AX, (short)value);
+        INT(21);
     }
 
     /////////////////////
     // Helper Functions
 
-    public static ArrayList<Object> asUnsigned(ArrayList<?> bytecode){
+    public static ArrayList<Object> asUnsigned(ArrayList<?> bytecode) {
         ArrayList<Object> unsignedNums = new ArrayList<>();
-        for(Object signedByte: bytecode){
-            if(signedByte instanceof Byte){
+        for (Object signedByte : bytecode) {
+            if (signedByte instanceof Byte) {
                 unsignedNums.add(((Byte) signedByte).intValue() & 0xFF);
-            }else{
+            } else {
                 unsignedNums.add(signedByte);
             }
         }
@@ -190,22 +193,22 @@ public class As {
     }
 
     private byte[] _byte(int value) {
-        return new byte[] {(byte) (value & 0xFF)};
+        return new byte[] { (byte) (value & 0xFF) };
     }
 
     private byte[] _word(int value) {
-        return new byte[] {(byte) (value & 0xFF), (byte) ((value & 0xFF00) >> 8)};
+        return new byte[] { (byte) (value & 0xFF), (byte) ((value & 0xFF00) >> 8) };
     }
 
     ////////////
     // Getters
 
     public ArrayList<Object> getByteCode() {
-        return this._bytecode;
+        return _bytecode;
     }
 
     public int getBinLength() {
-        return this._binLength;
+        return _binLength;
     }
 
     ////////////////
@@ -213,12 +216,12 @@ public class As {
 
     public ArrayList<Byte> compile() {
         ArrayList<Byte> result = new ArrayList<Byte> ();
-        for (Object cell : this._bytecode) {
+        for (Object cell : _bytecode) {
             if (cell instanceof String) {
                 String s = (String) cell;
                 switch (s.charAt(0)) {
                     case '1':
-                        for (byte b : this._byte(this._labels.get(s.substring(2)))) {
+                        for (byte b : _byte(_labels.get(s.substring(2)))) {
                             result.add(b);
                         }
                         break;
@@ -231,7 +234,7 @@ public class As {
                         String data = s.substring(2);
                         Matcher m = Pattern.compile("(.+):(.+)").matcher(data);
                         if (m.find()) {
-                            for (byte b : this._byte(this._labels.get(m.group(2)) - Integer.parseInt(m.group(1)))) {
+                            for (byte b : _byte(_labels.get(m.group(2)) - Integer.parseInt(m.group(1)))) {
                                 result.add(b);
                             }
                         }
@@ -241,7 +244,7 @@ public class As {
                 result.add(((Integer) cell).byteValue());
             }
         }
-        this._binLength = result.size();
+        _binLength = result.size();
         return result;
     }
 }
