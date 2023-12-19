@@ -8,7 +8,7 @@ public class Main {
         as.LABEL("START");
         as.NOP();
         as.INT(21);
-        as.MOV(as.AX,(byte)3);
+        as.MOV(as.AX,3);
         as.LABEL("HELLO");
         as.MOV(as.DX,"HELLO");
 

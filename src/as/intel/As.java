@@ -42,10 +42,14 @@ public class As {
     private int _binLength;
 
     private <T> void _bytecode_add(T x) throws IllegalArgumentException {
-        if(!((x instanceof String) || (x instanceof Byte))){
+        if(!((x instanceof String) || (x instanceof Number))){
             throw new IllegalArgumentException();
         }
+        if(x instanceof Number){
+            _bytecode.add((Byte) ((Number)x).byteValue());
+        }else {
         _bytecode.add(x);
+        }
         _IP++;
     }
 
@@ -65,20 +69,26 @@ public class As {
 
     public void INT(int val8b) {
         _bytecode_add(0xCD);
-        _bytecode_add(val8b & 0xFF);
+        _bytecode_add(val8b);
     }
 
     public void MOV(int reg, int val) {
         _bytecode_add(0xB0 | reg);
-        _bytecode_add(val & 0xFF);
+        _bytecode_add(val);
         if ((reg >= 0x08) && (reg <= 0x0F)) {
             _bytecode_add((val & 0xFF00) >> 8);
         }
     }
 
+    public void MOV(int reg16b, String val16b) {
+        this._bytecode_add(0xB0 | reg16b);
+        this._bytecode_add("2:" + val16b);
+        this._IP++;
+    }
+
     public void JMP(int dist8b) {
         _bytecode_add(0xEB);
-        _bytecode_add(dist8b & 0xFF);
+        _bytecode_add(dist8b);
     }
 
     public void JMP(String dist8b) {
@@ -241,7 +251,7 @@ public class As {
                         break;
                 }
             } else {
-                result.add(((Integer) cell).byteValue());
+                result.add((Byte) cell);
             }
         }
         _binLength = result.size();
