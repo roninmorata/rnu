@@ -74,9 +74,13 @@ public class As {
     }
 
     public void MOV(int reg, int val) {
-        _bytecode_add(0xB0 | reg);
+        if ((reg >= this.AX) && (reg <= this.DI)) {
+            _bytecode_add(0xB0 | reg);
+        } else {
+            _bytecode_add((0xB0 | reg) + 4);
+        }
         _bytecode_add(val);
-        if ((reg >= 0x08) && (reg <= 0x0F)) {
+        if ((reg >= this.AX) && (reg <= this.DI)) {
             _bytecode_add((val & 0xFF00) >> 8);
         }
     }
@@ -179,13 +183,13 @@ public class As {
     }
 
     public void EXIT() {
-        MOV(AX, (short)0);
-        INT(21);
+        MOV(AX, 0);
+        INT(0x21);
     }
 
     public void EXIT(int value) {
-        MOV(AX, (short)value);
-        INT(21);
+        MOV(AX, value);
+        INT(0x21);
     }
 
     /////////////////////
