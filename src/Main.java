@@ -7,7 +7,7 @@ public class Main {
         as.JMP("START");
         as.EXIT();
         as.LABEL("START");
-        as.MOV(as.AH,(byte)0x09);
+        as.MOV(as.AH,0x09);
         as.MOV(as.DX,"DATA");
         as.INT(21);
         as.EXIT();
