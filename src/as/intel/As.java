@@ -249,6 +249,11 @@ public class As {
                             }
                         }
                         break;
+                    default:
+                        for(byte b: s.getBytes()){
+                            result.add(b);
+                        }
+
                 }
             } else {
                 result.add((Byte) cell);
