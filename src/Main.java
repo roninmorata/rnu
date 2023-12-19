@@ -5,12 +5,14 @@ public class Main {
         As as = new As();
         
         as.JMP("START");
+        as.EXIT();
         as.LABEL("START");
-        as.NOP();
+        as.MOV(as.AH,(byte)0x09);
+        as.MOV(as.DX,"DATA");
         as.INT(21);
-        as.MOV(as.AX,(byte)3);
-        as.LABEL("HELLO");
-        as.MOV(as.DX,"HELLO");
+        as.EXIT();
+        as.LABEL("DATA");
+        as.DATA("HELLO WORLD");
 
         System.out.println(As.asUnsigned(as.getByteCode()));
         System.out.println(As.asUnsigned(as.compile()));        
