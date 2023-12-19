@@ -8,15 +8,17 @@ public class Main {
     public static void main(String[] args) {
         As as = new As();
         
+        as.PRINTCH((char)'A');
         as.JMP("START");
         as.EXIT();
         as.LABEL("START");
+        as.PRINTCH((char)'B');
         as.MOV(as.AH,0x09);
         as.MOV(as.DX,"DATA");
         as.INT(0x21);
         as.EXIT();
         as.LABEL("DATA");
-        as.DATA("\r\nHELLO WORLD");
+        as.DATA("\r\nHELLO WORLD$");
 
         System.out.println(As.asUnsigned(as.getByteCode()));
         System.out.println(As.asUnsigned(as.compile()));        

@@ -20,10 +20,10 @@ public class As {
     public final int CL = 0x01;
     public final int DL = 0x02;
     public final int BL = 0x03;
-    public final int AH = AL & 0x04;
-    public final int CH = CL & 0x04;
-    public final int DH = DL & 0x04;
-    public final int BH = BL & 0x04;
+    public final int AH = AL | 0x04;
+    public final int CH = CL | 0x04;
+    public final int DH = DL | 0x04;
+    public final int BH = BL | 0x04;
 
     public final int AX = 0x08;
     public final int CX = 0x09;
@@ -74,11 +74,7 @@ public class As {
     }
 
     public void MOV(int reg, int val) {
-        if ((reg >= this.AX) && (reg <= this.DI)) {
-            _bytecode_add(0xB0 | reg);
-        } else {
-            _bytecode_add((0xB0 | reg) + 4);
-        }
+        _bytecode_add(0xB0 | reg);
         _bytecode_add(val);
         if ((reg >= this.AX) && (reg <= this.DI)) {
             _bytecode_add((val & 0xFF00) >> 8);
@@ -190,6 +186,17 @@ public class As {
     public void EXIT(int value) {
         MOV(AX, value);
         INT(0x21);
+    }
+
+    public void INPUTCH() {
+        this.MOV(this.AH, 0x01);
+        this.INT(0x21);
+    }
+
+    public void PRINTCH(int value) {
+        this.MOV(this.AH, 0x02);
+        this.MOV(this.DL, value);
+        this.INT(0x21);
     }
 
     /////////////////////
