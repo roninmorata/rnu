@@ -6,6 +6,7 @@ Author: Ronin Morata, Anastasia Koshelenko
 
 package as.intel;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
@@ -224,7 +225,7 @@ public class As {
     ////////////////
     // Compilation
 
-    public ArrayList<Byte> compile() {
+    public ArrayList<Byte> compile(){
         ArrayList<Byte> result = new ArrayList<Byte> ();
         for (Object cell : _bytecode) {
             if (cell instanceof String) {
@@ -250,9 +251,13 @@ public class As {
                         }
                         break;
                     default:
-                        for(byte b: s.getBytes()){
+                        try{
+                        for(byte b: s.getBytes("ASCII")){
                             result.add(b);
                         }
+                    }catch(UnsupportedEncodingException e){
+                        System.out.println(e.getMessage());
+                    }
 
                 }
             } else {
