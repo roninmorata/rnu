@@ -1,10 +1,10 @@
-package util;
+package as.intel.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public abstract class AsAbstract{
-    
+public class AssemblerAbstract{
+
     protected int _IP; // Instruction Pointer
     protected ArrayList<Object> _bytecode;
     protected HashMap<String, Integer> _labels;
@@ -21,9 +21,6 @@ public abstract class AsAbstract{
         }
         _IP++;
     }
-
-        /////////////////////
-    // Helper Functions
 
     public static ArrayList<Object> asUnsigned(ArrayList<?> bytecode) {
         ArrayList<Object> unsignedNums = new ArrayList<>();
@@ -55,4 +52,6 @@ public abstract class AsAbstract{
     public int getBinLength() {
         return _binLength;
     }
+
+
 }

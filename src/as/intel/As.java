@@ -10,9 +10,12 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
+
+import as.intel.util.AssemblerAbstract;
+
 import java.util.regex.Matcher;
 
-public class As {
+public class As extends AssemblerAbstract {
     //////////////
     // Registers
 
@@ -34,26 +37,6 @@ public class As {
     public final int SI = 0x0E;
     public final int DI = 0x0F;
 
-    /////////////
-    // Bytecode
-
-    private int _IP; // Instruction Pointer
-    private ArrayList<Object> _bytecode;
-    private HashMap<String, Integer> _labels;
-    private int _binLength;
-
-    private <T> void _bytecode_add(T x) throws IllegalArgumentException {
-        if(!((x instanceof String) || (x instanceof Number))){
-            throw new IllegalArgumentException();
-        }
-        if(x instanceof Number){
-            _bytecode.add((Byte) ((Number)x).byteValue());
-        }else {
-        _bytecode.add(x);
-        }
-        _IP++;
-    }
-
     public As() {
         _IP = 0x100;
         _bytecode = new ArrayList<Object> ();
@@ -65,7 +48,7 @@ public class As {
     // Instructions
 
     public void NOP() {
-        _bytecode_add(0x90);
+        super._bytecode_add(0x90);
     }
 
     public void INT(int val8b) {
@@ -197,40 +180,6 @@ public class As {
         this.MOV(this.AH, 0x02);
         this.MOV(this.DL, value);
         this.INT(0x21);
-    }
-
-    /////////////////////
-    // Helper Functions
-
-    public static ArrayList<Object> asUnsigned(ArrayList<?> bytecode) {
-        ArrayList<Object> unsignedNums = new ArrayList<>();
-        for (Object signedByte : bytecode) {
-            if (signedByte instanceof Byte) {
-                unsignedNums.add(((Byte) signedByte).intValue() & 0xFF);
-            } else {
-                unsignedNums.add(signedByte);
-            }
-        }
-        return unsignedNums;
-    }
-
-    private byte[] _byte(int value) {
-        return new byte[] { (byte) (value & 0xFF) };
-    }
-
-    private byte[] _word(int value) {
-        return new byte[] { (byte) (value & 0xFF), (byte) ((value & 0xFF00) >> 8) };
-    }
-
-    ////////////
-    // Getters
-
-    public ArrayList<Object> getByteCode() {
-        return _bytecode;
-    }
-
-    public int getBinLength() {
-        return _binLength;
     }
 
     ////////////////

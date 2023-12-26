@@ -12,10 +12,7 @@ public class Main {
         as.JMP("START");
         as.EXIT();
         as.LABEL("START");
-<<<<<<< HEAD
-=======
         as.PRINTCH((char)'B');
->>>>>>> 17ba30c9dd8bba8d66bf80741cfd12957e276e67
         as.MOV(as.AH,0x09);
         as.MOV(as.DX,"DATA");
         as.INT(0x21);
