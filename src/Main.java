@@ -6,13 +6,16 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
+        
+        //no type casting in main
+
         As as = new As();
         
-        as.PRINTCH((char)'A');
+        as.PRINTCH('A');
         as.JMP("START");
         as.EXIT();
         as.LABEL("START");
-        as.PRINTCH((char)'B');
+        as.PRINTCH('B');
         as.MOV(as.AH,0x09);
         as.MOV(as.DX,"DATA");
         as.INT(0x21);

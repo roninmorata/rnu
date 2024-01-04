@@ -18,24 +18,25 @@ import java.util.regex.Matcher;
 public class As extends AssemblerAbstract {
     //////////////
     // Registers
+    public final short AL = 0x00;
+    public final short CL = 0x01;
+    public final short DL = 0x02;
+    public final short BL = 0x03;
+    public final short AH = AL | 0x04;
+    public final short CH = CL | 0x04;
+    public final short DH = DL | 0x04;
+    public final short BH = BL | 0x04;
 
-    public final int AL = 0x00;
-    public final int CL = 0x01;
-    public final int DL = 0x02;
-    public final int BL = 0x03;
-    public final int AH = AL | 0x04;
-    public final int CH = CL | 0x04;
-    public final int DH = DL | 0x04;
-    public final int BH = BL | 0x04;
+    public final short AX = 0x08;
+    public final short CX = 0x09;
+    public final short DX = 0x0A;
+    public final short BX = 0x0B;
+    public final short SP = 0x0C;
+    public final short BP = 0x0D;
+    public final short SI = 0x0E;
+    public final short DI = 0x0F;
 
-    public final int AX = 0x08;
-    public final int CX = 0x09;
-    public final int DX = 0x0A;
-    public final int BX = 0x0B;
-    public final int SP = 0x0C;
-    public final int BP = 0x0D;
-    public final int SI = 0x0E;
-    public final int DI = 0x0F;
+    // all registers are shorts and addressed only as constants of As
 
     public As() {
         _IP = 0x100;
@@ -48,7 +49,7 @@ public class As extends AssemblerAbstract {
     // Instructions
 
     public void NOP() {
-        super._bytecode_add(0x90);
+        _bytecode_add(0x90);
     }
 
     public void INT(int val8b) {
@@ -56,15 +57,15 @@ public class As extends AssemblerAbstract {
         _bytecode_add(val8b);
     }
 
-    public void MOV(int reg, int val) {
+    public void MOV(short reg, int val) {
         _bytecode_add(0xB0 | reg);
         _bytecode_add(val);
-        if ((reg >= this.AX) && (reg <= this.DI)) {
+        if ((reg >= AX) && (reg <= DI)) {
             _bytecode_add((val & 0xFF00) >> 8);
         }
     }
 
-    public void MOV(int reg16b, String val16b) {
+    public void MOV(short reg16b, String val16b) {
         this._bytecode_add(0xB0 | reg16b);
         this._bytecode_add("2:" + val16b);
         this._IP++;
@@ -86,19 +87,19 @@ public class As extends AssemblerAbstract {
         _IP++;
     }
 
-    public void INC(int reg16b) {
+    public void INC(short reg16b) {
         _bytecode_add(0x40 | reg16b >> 4);
     }
 
-    public void DEC(int reg16b) {
+    public void DEC(short reg16b) {
         _bytecode_add(0x40 | reg16b);
     }
 
-    public void POP(int reg16b) {
+    public void POP(short reg16b) {
         _bytecode_add(0x50 | reg16b);
     }
 
-    public void PUSH(int reg16b) {
+    public void PUSH(short reg16b) {
         _bytecode_add(0x50 | (reg16b >> 4));
     }
 
@@ -107,7 +108,7 @@ public class As extends AssemblerAbstract {
         _bytecode_add(val8b & 0xFF);
     }
 
-    public void CMP(short val16b) {
+    public void CMP(int val16b) {
         _bytecode_add(0x3D);
         _bytecode_add(val16b & 0xFFFF);
     }
@@ -148,6 +149,40 @@ public class As extends AssemblerAbstract {
 
     public void JNE(int dist8b) {
         JNZ(dist8b);
+    }
+
+    public void ADD(short reg1, short reg2) {
+        if(reg1 < AX){
+            _bytecode_add(0x02);
+        }else{
+            _bytecode_add(0x03);
+        }
+        _bytecode_add(reg1);
+        _bytecode_add(reg2);
+    }
+
+    public void ADD(short reg, int val){
+        switch(reg) {
+        case AL:
+            _bytecode_add(0x04);
+            _bytecode_add(val & 0xFF);
+            break;
+        case AX:
+            _bytecode_add(0x05);
+            _bytecode_add(val);
+            _bytecode_add((val & 0xFF00) >> 8);
+            break;
+        default:
+            if(reg < AX){
+                _bytecode_add(0x80);
+                _bytecode_add(val & 0xFF);
+            } else {
+                _bytecode_add(0x81);
+                _bytecode_add(val);
+                _bytecode_add((val & 0xFF00) >> 8);
+            }
+            break;
+        }
     }
 
     /////////////////////////
