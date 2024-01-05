@@ -103,14 +103,29 @@ public class As extends AssemblerAbstract {
         _bytecode_add(0x50 | (reg16b >> 4));
     }
 
-    public void CMP(byte val8b) {
-        _bytecode_add(0x3C);
-        _bytecode_add(val8b & 0xFF);
+    public void CMP(short reg, int val) { //test this
+        if(reg < AX){
+            _bytecode_add(0x80);
+            _bytecode_add(val & 0xFF);
+        }
+        else if(reg == AX){
+            _bytecode_add(0x3D);
+            _bytecode_add(val & 0xFF);
+            _bytecode_add((val & 0xFF00) >> 8);
+        }else{
+            _bytecode_add(0x81);
+            _bytecode_add(0xFC | reg);
+            if(val > 0xFF){
+                if(val > 255)
+                _bytecode_add(val & 0xFF);
+            _bytecode_add((val & 0xFF00) >> 8);
+            }
+        }
     }
 
-    public void CMP(int val16b) {
-        _bytecode_add(0x3D);
-        _bytecode_add(val16b & 0xFFFF);
+    public void CMP(short reg1, short reg2) { // test this
+        _bytecode_add(0x38 + reg1 & 0x07);
+        _bytecode_add(0xC0 | 0xC0 |(reg2 & 0x07) >> -3 | (reg1 & 0x07));
     }
 
     public void JZ(int dist8b) {
@@ -157,24 +172,46 @@ public class As extends AssemblerAbstract {
         }else{
             _bytecode_add(0x01);
         }
-        _bytecode_add(0xC0 |(reg1) >> -3 | reg2);
+        _bytecode_add(0xC0 |(reg2 & 0x07) >> -3 | (reg1 & 0x07));
     }
 
     public void ADD(short reg, int val){
         if(reg == AL){
             _bytecode_add(0x04);
-            _bytecode_add(val & 0xFF);
         }else if(reg < AX){
             _bytecode_add(0x80);
             _bytecode_add(0xC0 | reg);
-            _bytecode_add(val);
         }else{
             _bytecode_add(0x81);
-            _bytecode_add(0xB8 + reg);
+            _bytecode_add(0xB8 | (reg & 0x07));
             if(val > 255)
                 _bytecode_add((val & 0xFF00) >> 8);
-            _bytecode_add(val);
         }
+        _bytecode_add(val & 0xFF);
+    }
+
+    public void SUB(short reg1, short reg2){
+        _bytecode_add(0x28 + reg1/8);
+        _bytecode_add(0xC0 |(reg2 & 0x07) >> -3 | (reg1 & 0x07));
+    }
+
+    public void SUB(short reg, int val){
+        if(reg == AL){
+            _bytecode_add(0x2D);
+            _bytecode_add(0xFF & val);
+            _bytecode_add((val & 0xFF00) >> 8);
+        }else if(reg < AX){
+            _bytecode_add(0x80);
+            _bytecode_add(0xEC | reg);
+        }else{
+            _bytecode_add(0x83);
+            _bytecode_add(0xE8 | reg);
+            _bytecode_add(0xFF & val);
+            if(val > 0xFF){
+            _bytecode_add((val & 0xFF00) >> 8);
+            }
+        }
+
     }
 
     /////////////////////////
