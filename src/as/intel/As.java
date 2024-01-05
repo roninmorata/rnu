@@ -153,35 +153,27 @@ public class As extends AssemblerAbstract {
 
     public void ADD(short reg1, short reg2) {
         if(reg1 < AX){
-            _bytecode_add(0x02);
+            _bytecode_add(0x00);
         }else{
-            _bytecode_add(0x03);
+            _bytecode_add(0x01);
         }
-        _bytecode_add(reg1);
-        _bytecode_add(reg2);
+        _bytecode_add(0xC0 |(reg1) >> -3 | reg2);
     }
 
     public void ADD(short reg, int val){
-        switch(reg) {
-        case AL:
+        if(reg == AL){
             _bytecode_add(0x04);
             _bytecode_add(val & 0xFF);
-            break;
-        case AX:
-            _bytecode_add(0x05);
+        }else if(reg < AX){
+            _bytecode_add(0x80);
+            _bytecode_add(0xC0 | reg);
             _bytecode_add(val);
-            _bytecode_add((val & 0xFF00) >> 8);
-            break;
-        default:
-            if(reg < AX){
-                _bytecode_add(0x80);
-                _bytecode_add(val & 0xFF);
-            } else {
-                _bytecode_add(0x81);
-                _bytecode_add(val);
+        }else{
+            _bytecode_add(0x81);
+            _bytecode_add(0xB8 + reg);
+            if(val > 255)
                 _bytecode_add((val & 0xFF00) >> 8);
-            }
-            break;
+            _bytecode_add(val);
         }
     }
 
