@@ -2,6 +2,8 @@ package as.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public abstract class AssemblerAbstract{
 
@@ -53,5 +55,28 @@ public abstract class AssemblerAbstract{
         return _binLength;
     }
 
+    ////////////////
+    // Compilation
+
     public abstract ArrayList<Byte> compile();
+
+    public void makeBinFile(String fileName) {
+        ArrayList<Byte> data = new ArrayList<>();
+        data = this.compile();
+
+        FileOutputStream fos = null;
+
+        try {
+            fos = new FileOutputStream(fileName);
+
+            for (Byte b : data) {
+                fos.write(b);
+            }
+
+            fos.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

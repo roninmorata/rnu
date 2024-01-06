@@ -1,9 +1,5 @@
 import as.intel.As;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-
 public class Main {
     public static void main(String[] args) {
         
@@ -26,22 +22,6 @@ public class Main {
         System.out.println(As.asUnsigned(as.getByteCode()));
         System.out.println(As.asUnsigned(as.compile()));        
 
-        ArrayList<Byte> data = new ArrayList<>();
-        data = as.compile();
-
-        FileOutputStream fos = null;
-
-        try {
-            fos = new FileOutputStream("TEST.COM");
-
-            for (Byte b : data) {
-                fos.write(b);
-            }
-
-            fos.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        as.makeBinFile("TEST.COM");
     }
 }
