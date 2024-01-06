@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
-import as.intel.util.AssemblerAbstract;
+import as.util.AssemblerAbstract;
 
 import java.util.regex.Matcher;
 

@@ -1,9 +1,9 @@
-package as.intel.util;
+package as.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class AssemblerAbstract{
+public abstract class AssemblerAbstract{
 
     protected int _IP; // Instruction Pointer
     protected ArrayList<Object> _bytecode;
@@ -53,5 +53,5 @@ public class AssemblerAbstract{
         return _binLength;
     }
 
-
+    public abstract ArrayList<Byte> compile();
 }

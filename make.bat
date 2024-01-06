@@ -1,8 +1,6 @@
 @echo off
 
-cd src\as\intel
-if exist As.class del As.class
-javac As.java
-cd ..\..
-if exist Main.class del Main.class
+cd src
+javac as\AssemblerAbstract.java
+javac as\intel\As.java
 javac Main.java
