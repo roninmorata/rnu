@@ -22,6 +22,6 @@ public class Main {
         System.out.println(As.asUnsigned(as.getByteCode()));
         System.out.println(As.asUnsigned(as.compile()));        
 
-        as.makeBinFile("TEST.COM");
+        as.makeBinFile("TEST.COM", "BIN");
     }
 }
