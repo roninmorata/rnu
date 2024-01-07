@@ -221,7 +221,7 @@ public class As extends AssemblerAbstract {
         _labels.put(label, _IP);
     }
 
-    public void DATA(String data) { //FIXFIX
+    public void DATA(String data) {
         _bytecode_add(data);
     }
 

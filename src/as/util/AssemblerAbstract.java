@@ -1,10 +1,15 @@
+/*
+RNU
+Assembler abstract class
+Author: Ronin Morata, Anastasia Koshelenko
+*/
+
 package as.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.Math;
 
 public abstract class AssemblerAbstract{
 
